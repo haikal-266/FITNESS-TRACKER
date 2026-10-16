@@ -1,0 +1,76 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model UserProfile {
+  id             Int      @id @default(1)
+  name           String   @default("Pengguna")
+  age            Int      @default(20)
+  gender         String   @default("pria") // "pria" | "wanita"
+  height         Float    @default(170)    // cm
+  weight         Float    @default(65)     // kg
+  activityLevel  String   @default("sedang") // "jarang" | "ringan" | "sedang" | "berat"
+  goal           String   @default("turun")  // "turun" | "tetap" | "naik"
+  targetCalories Int      @default(2000)
+  updatedAt      DateTime @updatedAt
+}
+
+model FoodLog {
+  id        Int      @id @default(autoincrement())
+  date      String   // format "YYYY-MM-DD"
+  mealType  String   @default("sarapan") // "sarapan" | "siang" | "malam" | "snack"
+  foodName  String
+  portion   Float    @default(1)
+  unit      String   @default("porsi")
+  calories  Int
+  protein   Float?   @default(0)
+  carbs     Float?   @default(0)
+  fat       Float?   @default(0)
+  createdAt DateTime @default(now())
+}
+
+model FoodItem {
+  id        Int      @id @default(autoincrement())
+  name      String
+  unit      String
+  calories  Int
+  category  String?  @default("Umum")
+}
+
+model Recipe {
+  id           Int      @id @default(autoincrement())
+  name         String
+  category     String   // "Sarapan" | "Makan siang" | "Makan malam"
+  cookingTime  Int      // menit
+  portions     Int      @default(1)
+  calories     Int
+  ingredients  String   // JSON string
+  steps        String   // JSON string
+}
+
+model WorkoutLog {
+  id              Int      @id @default(autoincrement())
+  date            String   // format "YYYY-MM-DD"
+  exerciseName    String
+  targetMuscle    String?
+  sets            Int      @default(3)
+  value           Int      @default(10) // reps atau detik atau menit
+  unit            String   @default("rep") // "rep" | "detik" | "menit"
+  caloriesBurned  Float
+  fatGrams        Float
+  completed       Boolean  @default(true)
+  createdAt       DateTime @default(now())
+}
+
+model WorkoutSchedule {
+  id          Int      @id @default(autoincrement())
+  day         String   // "Senin", "Selasa", dll.
+  focus       String   // "Push Day", "Pull Day", "Legs", "Cardio", "Rest Day"
+  isRestDay   Boolean  @default(false)
+  exercises   String   // JSON string array gerakan
+}
